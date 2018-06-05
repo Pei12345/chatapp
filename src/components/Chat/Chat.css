@@ -1,0 +1,20 @@
+.chat-container {
+  margin: 0 auto;
+  max-width: 800px;  
+  padding: 20px;
+}
+
+.chat-message {
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  padding: 10px;
+  min-height: 75px;
+  display: block;
+  margin: 3px;
+  width: 90%;
+  text-align: start;
+}
+
+.chat-message:hover {
+  background-color: black;
+}
