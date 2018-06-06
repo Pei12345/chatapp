@@ -29,17 +29,25 @@ class Chat extends React.Component {
    
 
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/chathub')
+      .withUrl('https://localhost:5003/chathub')
       .configureLogging(signalR.LogLevel.Information)
       .build();
+
     this.setState({ hubConnection, nick }, () => {
       this.state.hubConnection
         .start()
         .catch(err => console.error(err.toString()));
 
+    this.state.hubConnection.on('ChatHistory', history => {
+      const messages = history.map((message, index) => {
+        return `${history[index].sent} ${history[index].user}: ${history[index].message}`;
+      });
+      this.setState({ messages });
+    });
+
       // SignalR set state with received message
-      this.state.hubConnection.on('ReceiveMessage', (nick, receivedMessage) => {          
-        const text = `${this.getTime()} ${nick}: ${receivedMessage}`;
+      this.state.hubConnection.on('ReceiveMessage', receivedMessage => {          
+        const text = `${receivedMessage.sent} ${receivedMessage.user}: ${receivedMessage.message}`;
         const messages = this.state.messages.concat([text]);
         this.setState({ messages });
       });
