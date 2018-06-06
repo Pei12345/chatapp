@@ -30,6 +30,6 @@
   background-color: #222;
 }
 
-button {
-  margin-bottom: 40px;
+.message-input-block {
+  margin: 40px;
 }

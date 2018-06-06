@@ -21,8 +21,8 @@ class Chat extends React.Component {
 
   componentDidMount = () => {
     // setup nickname and connection
-    // const nick = window.prompt('Your nickname:', '');
-    const nick = 'Jussi';
+    const nick = window.prompt('Your nickname:', '');
+    // const nick = 'Jussi';
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
@@ -38,16 +38,16 @@ class Chat extends React.Component {
 
       // SignalR get chat history onconnect (50 latest messages)
     this.state.hubConnection.on('ChatHistory', history => {
-      const messages = history.map((message, index) => {
+      const messages = history.map((message, index) => {        
         return message;
       });
-      console.log(messages.toString());
+      messages.reverse();
       this.setState({ messages });
     });
 
       // SignalR set state with received message
       this.state.hubConnection.on('ReceiveMessage', receivedMessage => {         
-        const messages = this.state.messages.concat(receivedMessage);
+        const messages = [receivedMessage].concat(this.state.messages);
         this.setState({ messages });
       });
     });
@@ -65,6 +65,14 @@ class Chat extends React.Component {
   render() {
     return (
       <div>
+        <div className="message-input-block">
+          <input
+            type="text"
+            value={this.state.message}
+            onChange={e => this.setState({ message: e.target.value })}
+          />
+          <button onClick={this.sendMessage}>Send</button>
+        </div>
         <Scroll id="chat-scroll">
           <div className="chat-container">
             {this.state.messages.map((message, index) => (
@@ -77,12 +85,6 @@ class Chat extends React.Component {
           </div>
         </Scroll>
         <br />
-        <input
-          type="text"
-          value={this.state.message}
-          onChange={e => this.setState({ message: e.target.value })}
-        />
-        <button onClick={this.sendMessage}>Send</button>
       </div>
     );
   }
