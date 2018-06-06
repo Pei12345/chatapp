@@ -8,18 +8,23 @@ class Chat extends React.Component {
     super(props);
 
     this.state = {
+      hubConnection: null,
       nick: '',
       message: '',
-      messages: [],
-      hubConnection: null
+      messages: [{
+        sent: '',
+        user: '',
+        message: '',
+      }],
     };
   }
 
   componentDidMount = () => {
     // setup nickname and connection
-    const nick = window.prompt('Your nickname:', '');
-    // const nick = 'Jussi';
+    // const nick = window.prompt('Your nickname:', '');
+    const nick = 'Jussi';
 
+    // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
     const hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(hubUrl)
@@ -31,22 +36,24 @@ class Chat extends React.Component {
         .start()
         .catch(err => console.error(err.toString()));
 
+      // SignalR get chat history onconnect (50 latest messages)
     this.state.hubConnection.on('ChatHistory', history => {
       const messages = history.map((message, index) => {
-        return `${history[index].sent} ${history[index].user}: ${history[index].message}`;
+        return message;
       });
+      console.log(messages.toString());
       this.setState({ messages });
     });
 
       // SignalR set state with received message
-      this.state.hubConnection.on('ReceiveMessage', receivedMessage => {          
-        const text = `${receivedMessage.sent} ${receivedMessage.user}: ${receivedMessage.message}`;
-        const messages = this.state.messages.concat([text]);
+      this.state.hubConnection.on('ReceiveMessage', receivedMessage => {         
+        const messages = this.state.messages.concat(receivedMessage);
         this.setState({ messages });
       });
     });
   };
 
+  // SignalR send message
   sendMessage = () => {
     this.state.hubConnection
       .invoke('SendMessage', this.state.nick, this.state.message)
@@ -62,7 +69,9 @@ class Chat extends React.Component {
           <div className="chat-container">
             {this.state.messages.map((message, index) => (
               <div className="chat-message" key={index}>
-                {message}
+               <span className="chat-message-header">{message.sent} {message.user}</span>
+               <br/>
+               <p className="chat-message-body">{message.message}</p>
               </div>            
             ))}
           </div>
