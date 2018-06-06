@@ -2,7 +2,6 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Chat from '../components/Chat/Chat.js';
-import Scroll from '../components/Scroll/Scroll.js';
 
 class App extends React.Component {
   render() {

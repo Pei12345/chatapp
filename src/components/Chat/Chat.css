@@ -6,7 +6,8 @@
 
 .chat-message {
   border-top: 1px solid;
-  border-bottom: 1px solid;
+  /* border-bottom: 1px solid; */
+  border-color: #1abc9c;
   padding: 10px;
   min-height: 75px;
   display: block;
@@ -17,4 +18,8 @@
 
 .chat-message:hover {
   background-color: black;
+}
+
+button {
+  margin-bottom: 40px;
 }

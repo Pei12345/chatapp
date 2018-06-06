@@ -2,7 +2,8 @@
     margin-top: 30px;
     margin-bottom: 30px;
     overflow-y: scroll;
-    border-top: 1px solid;
-    border-bottom: 1px solid;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    border-color: #1abc9c;
     height: 600px;
 }
