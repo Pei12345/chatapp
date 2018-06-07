@@ -16,6 +16,7 @@ class Chat extends React.Component {
         user: '',
         message: '',
       }],
+      onlineUsers: [],
     };
   }
 
@@ -27,7 +28,7 @@ class Chat extends React.Component {
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl)
+      .withUrl(hubUrl + `?name=${nick}`)
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -35,36 +36,43 @@ class Chat extends React.Component {
       this.state.hubConnection
         .start()
         .catch(err => console.error(err.toString()));
+        
+        // SignalR get chat history onconnect (50 latest messages)
+        this.state.hubConnection.on('ChatHistory', history => {
+          const messages = history.map((message, index) => {        
+            return message;
+          });
+          messages.reverse();
+          this.setState({ messages });
+        });
 
-      // SignalR get chat history onconnect (50 latest messages)
-    this.state.hubConnection.on('ChatHistory', history => {
-      const messages = history.map((message, index) => {        
-        return message;
+        // SignalR get online users
+        this.state.hubConnection.on('GetOnlineUsers', receivedUsers => {         
+          const onlineUsers = receivedUsers.map((user, index) => {        
+            return user.username +', ';
+        });
+        this.setState( {onlineUsers} )
       });
-      messages.reverse();
-      this.setState({ messages });
-    });
-
-      // SignalR set state with received message
-      this.state.hubConnection.on('ReceiveMessage', receivedMessage => {         
-        const messages = [receivedMessage].concat(this.state.messages);
-        this.setState({ messages });
+        
+        // SignalR set state with received message
+        this.state.hubConnection.on('ReceiveMessage', receivedMessage => {         
+          const messages = [receivedMessage].concat(this.state.messages);
+          this.setState({ messages });
+        });
       });
-    });
   };
 
   // SignalR send message
   sendMessage = () => {
     this.state.hubConnection
       .invoke('SendMessage', this.state.nick, this.state.message)
-      .catch(err => console.error(err));
-
-    this.setState({ message: '' });
+      .catch(err => console.error(err));    
   };
 
   render() {
     return (
       <div>
+        <span className="online-users">Online users [{this.state.onlineUsers.length}]: {this.state.onlineUsers} </span>
         <div className="message-input-block">
           <input
             type="text"
