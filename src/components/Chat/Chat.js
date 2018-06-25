@@ -30,9 +30,16 @@ class Chat extends React.Component {
     return nickToReturn;
   };
 
+  formatTimestamp = (timestamp) => {
+    let returnValue = timestamp.replace('T', ' ');
+    returnValue = returnValue.split('.')[0];
+    return returnValue;
+  }
+
   componentDidMount = () => {
     // setup nickname and connection
-    const nick = this.getNick();
+    // const nick = this.getNick();
+    const nick = "sadsad";
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
@@ -108,7 +115,7 @@ class Chat extends React.Component {
             {this.state.messages.map((message, index) => (
               <div className="chat-message" key={index}>
                 <span className="chat-message-header">
-                  {message.sent} {message.user}
+                  {this.formatTimestamp(message.sent)} {message.user}
                 </span>
                 <br />
                 <p className="chat-message-body">{message.message}</p>
