@@ -23,7 +23,6 @@ class Chat extends React.Component {
   componentDidMount = () => {
     // setup nickname and connection
     const nick = window.prompt('Your nickname:', '');
-    // const nick = 'Jussi';
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
@@ -37,7 +36,7 @@ class Chat extends React.Component {
         .start()
         .catch(err => console.error(err.toString()));
         
-        // SignalR get chat history onconnect (50 latest messages)
+        // SignalR get chat history onconnect
         this.state.hubConnection.on('ChatHistory', history => {
           const messages = history.map((message, index) => {        
             return message;
