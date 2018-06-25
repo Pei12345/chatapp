@@ -25,7 +25,7 @@ class Chat extends React.Component {
   getNick = () => {
     let nickToReturn = '';
     while (nickToReturn.length < 3) {
-      nickToReturn = window.prompt('Your nickname (min length 3):', '');
+      nickToReturn = window.prompt('Your nickname (min length 3):', '').trim();
     }
     return nickToReturn;
   };
@@ -38,8 +38,7 @@ class Chat extends React.Component {
 
   componentDidMount = () => {
     // setup nickname and connection
-    // const nick = this.getNick();
-    const nick = "sadsad";
+    const nick = this.getNick();
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
