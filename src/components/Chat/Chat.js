@@ -32,14 +32,15 @@ class Chat extends React.Component {
   };
 
   formatTimestamp = (timestamp) => {
+    timestamp = timestamp.split('Z')[0];
     const offset = moment().utcOffset();
-    let time = moment(timestamp).add(offset, 'minute').format('DD.M.YYYY hh:mm:ss');    
+    const time = moment(timestamp).add(offset, 'minute').format('DD.M.YYYY HH:mm:ss');
     return time;
   }
 
   componentDidMount = () => {
     // setup nickname and connection
-    const nick = this.getNick();
+    const nick = this.getNick();    
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
