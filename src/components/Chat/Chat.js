@@ -2,6 +2,7 @@ import React from 'react';
 import './Chat.css';
 import Scroll from '../Scroll/Scroll.js';
 const signalR = require('@aspnet/signalr');
+const moment = require('moment');
 
 class Chat extends React.Component {
   constructor(props) {
@@ -31,9 +32,9 @@ class Chat extends React.Component {
   };
 
   formatTimestamp = (timestamp) => {
-    let returnValue = timestamp.replace('T', ' ');
-    returnValue = returnValue.split('.')[0];
-    return returnValue;
+    const offset = moment().utcOffset();
+    let time = moment(timestamp).add(offset, 'minute').format('DD.M.YYYY hh:mm:ss');    
+    return time;
   }
 
   componentDidMount = () => {
