@@ -46,6 +46,7 @@ chrome-user-data
 *.swp
 *.swo
 *.env*
+/.vscode
 
 
 
