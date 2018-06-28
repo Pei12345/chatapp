@@ -24,23 +24,30 @@ class Chat extends React.Component {
   }
 
   getNick = () => {
-    let nickToReturn = '';
-    while (nickToReturn.length < 3) {
-      nickToReturn = window.prompt('Your nickname (min length 3):', '').trim();
+    let nick = sessionStorage.getItem('nick');
+
+    if (typeof nick === 'undefined' || nick === null) {
+      nick = window.prompt('Your nickname (min length 3):', '').trim();
+      if (nick.length < 3) {
+        return this.getNick();
+      }
+      sessionStorage.setItem('nick', nick);
     }
-    return nickToReturn;
+    return nick;
   };
 
-  formatTimestamp = (timestamp) => {
+  formatTimestamp = timestamp => {
     timestamp = timestamp.split('Z')[0];
     const offset = moment().utcOffset();
-    const time = moment(timestamp).add(offset, 'minute').format('DD.M.YYYY HH:mm:ss');
+    const time = moment(timestamp)
+      .add(offset, 'minute')
+      .format('DD.M.YYYY HH:mm:ss');
     return time;
-  }
+  };
 
   componentDidMount = () => {
     // setup nickname and connection
-    const nick = this.getNick();    
+    const nick = this.getNick();
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
@@ -95,7 +102,7 @@ class Chat extends React.Component {
       <div>
         <span className="online-users">
           Online users [{this.state.onlineUsers.length}]:{' '}
-          {this.state.onlineUsers}{' '}
+          {this.state.onlineUsers}
         </span>
         <div className="message-input-block">
           <input
