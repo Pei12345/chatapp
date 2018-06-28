@@ -11,6 +11,7 @@ class Chat extends React.Component {
     this.state = {
       hubConnection: null,
       nick: '',
+      roomName: '1',
       message: '',
       messages: [
         {
@@ -36,6 +37,18 @@ class Chat extends React.Component {
     return nick;
   };
 
+  onInputKeyPress = (e) => {
+    if (e.key === 'Enter'){
+      this.sendMessage();
+    }
+  }
+
+  roomButtonOnClick = (e) => {
+    const from = this.state.roomName;
+    const roomName = e.target.value;
+    this.setState({roomName}, () => this.changeRoom(from, this.state.roomName));   
+  }
+
   formatTimestamp = timestamp => {
     timestamp = timestamp.split('Z')[0];
     const offset = moment().utcOffset();
@@ -52,7 +65,7 @@ class Chat extends React.Component {
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl + `?name=${nick}`)
+      .withUrl(hubUrl + `?name=${nick}&roomName=${this.state.roomName}`)
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -90,16 +103,26 @@ class Chat extends React.Component {
   sendMessage = () => {
     this.setState({ message: this.state.message.trim() });
     this.state.hubConnection
-      .invoke('SendMessage', this.state.nick, this.state.message)
+      .invoke('SendMessage', this.state.nick, this.state.roomName, this.state.message)
       .then(() => {
         this.setState({ message: '' });
       })
       .catch(err => console.error(err));
   };
 
+  // SignalR change room
+  changeRoom = (from, to) => {
+    this.state.hubConnection.invoke("ChangeRoom", from, to);
+  };
+
   render() {
     return (
       <div>
+      <div>      
+      <button className="btn" value="1" disabled={this.state.roomName === '1'} onClick={this.roomButtonOnClick}>Room 1</button>   
+      <button className="btn" value="2" disabled={this.state.roomName === '2'} onClick={this.roomButtonOnClick}>Room 2</button>   
+      <button className="btn" value="3" disabled={this.state.roomName === '3'} onClick={this.roomButtonOnClick}>Room 3</button>   
+      </div>
         <span className="online-users">
           Online users [{this.state.onlineUsers.length}]:{' '}
           {this.state.onlineUsers}
@@ -108,6 +131,7 @@ class Chat extends React.Component {
           <input
             type="text"
             value={this.state.message}
+            onKeyPress={this.onInputKeyPress}
             onChange={e => this.setState({ message: e.target.value })}
           />
           <button
