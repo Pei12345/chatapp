@@ -1,6 +1,7 @@
 import React from 'react';
 import './Chat.css';
 import ChatMessages from '../../components/ChatMessages/ChatMessages.js';
+import ChatOnlineUsers from '../../components/ChatOnlineUsers/ChatOnlineUsers.js';
 import ChatMessageInput from '../../components/ChatMessageInput/ChatMessageInput.js';
 const signalR = require('@aspnet/signalr');
 const moment = require('moment');
@@ -37,20 +38,22 @@ class Chat extends React.Component {
     return nick;
   };
 
-  onChangeInputValue = (e) => {
-    this.setState({ message: e.target.value })
+  onChangeInputValue = e => {
+    this.setState({ message: e.target.value });
   };
 
-  onInputKeyPress = (e) => {
-    if (e.key === 'Enter'){
+  onInputKeyPress = e => {
+    if (e.key === 'Enter') {
       this.sendMessage();
     }
   };
 
-  roomButtonOnClick = (e) => {
+  roomButtonOnClick = e => {
     const from = this.state.roomName;
     const roomName = e.target.value;
-    this.setState({roomName}, () => this.changeRoom(from, this.state.roomName));   
+    this.setState({ roomName }, () =>
+      this.changeRoom(from, this.state.roomName)
+    );
   };
 
   formatTimestamp = timestamp => {
@@ -107,7 +110,12 @@ class Chat extends React.Component {
   sendMessage = () => {
     this.setState({ message: this.state.message.trim() });
     this.state.hubConnection
-      .invoke('SendMessage', this.state.nick, this.state.roomName, this.state.message)
+      .invoke(
+        'SendMessage',
+        this.state.nick,
+        this.state.roomName,
+        this.state.message
+      )
       .then(() => {
         this.setState({ message: '' });
       })
@@ -116,25 +124,26 @@ class Chat extends React.Component {
 
   // SignalR change room
   changeRoom = (from, to) => {
-    this.state.hubConnection.invoke("ChangeRoom", from, to);
+    this.state.hubConnection.invoke('ChangeRoom', from, to);
   };
 
   render() {
-    return(
+    return (
       <div>
-        <ChatMessageInput 
+        <ChatOnlineUsers onlineUsers={this.state.onlineUsers} />
+        <ChatMessageInput
           message={this.state.message}
           onInputKeyPress={this.onInputKeyPress}
           onChangeInputValue={this.onChangeInputValue}
           sendMessage={this.sendMessage}
-          />
-        <ChatMessages 
+        />
+        <ChatMessages
           state={this.state}
           roomButtonOnClick={this.roomButtonOnClick}
-          formatTimestamp={this.formatTimestamp}          
+          formatTimestamp={this.formatTimestamp}
         />
       </div>
-    )
+    );
   }
 }
 

@@ -12,12 +12,6 @@ const ChatMessages = (props) => {
         <button className="btn" value="2" disabled={state.roomName === '2'} onClick={roomButtonOnClick}>Room 2</button>   
         <button className="btn" value="3" disabled={state.roomName === '3'} onClick={roomButtonOnClick}>Room 3</button>   
         </div>
-        {/* online users -> new component */}
-          <span className="online-users">
-            Online users [{state.onlineUsers.length}]:{' '}
-            {state.onlineUsers}
-          </span>          
-          
           <Scroll id="chat-scroll">
             <div className="chat-container">
               {state.messages.map((message, index) => (
