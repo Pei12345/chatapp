@@ -3,7 +3,7 @@ import './ChatMessages.css';
 import Scroll from '../Scroll/Scroll.js';
 
 const ChatMessages = (props) => {
-    const {state, roomButtonOnClick, onInputKeyPress, onChangeInputValue, formatTimestamp, sendMessage} = props;
+    const {state, roomButtonOnClick, formatTimestamp,} = props;
     return (
         <div>
         <div>      
@@ -16,23 +16,8 @@ const ChatMessages = (props) => {
           <span className="online-users">
             Online users [{state.onlineUsers.length}]:{' '}
             {state.onlineUsers}
-          </span>
-          {/* message input block -> new component*/}
-          <div className="message-input-block">
-            <input
-              type="text"
-              value={state.message}
-              onKeyPress={onInputKeyPress}
-              onChange={onChangeInputValue}
-            />
-            <button
-              type="button"
-              disabled={!state.message}
-              onClick={sendMessage}
-            >
-              Send
-            </button>
-          </div>
+          </span>          
+          
           <Scroll id="chat-scroll">
             <div className="chat-container">
               {state.messages.map((message, index) => (

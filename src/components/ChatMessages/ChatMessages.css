@@ -28,11 +28,7 @@
   .chat-message:hover {
     background-color: #222;
   }
-  
-  .message-input-block {
-    margin: 40px;
-  }
-  
+    
   .btn {
     margin: 10px;
     padding: 10px;

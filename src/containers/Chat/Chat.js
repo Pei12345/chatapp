@@ -1,6 +1,7 @@
 import React from 'react';
 import './Chat.css';
 import ChatMessages from '../../components/ChatMessages/ChatMessages.js';
+import ChatMessageInput from '../../components/ChatMessageInput/ChatMessageInput.js';
 const signalR = require('@aspnet/signalr');
 const moment = require('moment');
 
@@ -121,13 +122,16 @@ class Chat extends React.Component {
   render() {
     return(
       <div>
+        <ChatMessageInput 
+          message={this.state.message}
+          onInputKeyPress={this.onInputKeyPress}
+          onChangeInputValue={this.onChangeInputValue}
+          sendMessage={this.sendMessage}
+          />
         <ChatMessages 
           state={this.state}
           roomButtonOnClick={this.roomButtonOnClick}
-          onInputKeyPress={this.onInputKeyPress}
-          onChangeInputValue={this.onChangeInputValue}
-          formatTimestamp={this.formatTimestamp}
-          sendMessage={this.sendMessage}
+          formatTimestamp={this.formatTimestamp}          
         />
       </div>
     )
