@@ -1,13 +1,12 @@
 import React from 'react';
 import './Chat.css';
-import Scroll from '../Scroll/Scroll.js';
+import ChatMessages from '../../components/ChatMessages/ChatMessages.js';
 const signalR = require('@aspnet/signalr');
 const moment = require('moment');
 
 class Chat extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       hubConnection: null,
       nick: '',
@@ -37,17 +36,21 @@ class Chat extends React.Component {
     return nick;
   };
 
+  onChangeInputValue = (e) => {
+    this.setState({ message: e.target.value })
+  };
+
   onInputKeyPress = (e) => {
     if (e.key === 'Enter'){
       this.sendMessage();
     }
-  }
+  };
 
   roomButtonOnClick = (e) => {
     const from = this.state.roomName;
     const roomName = e.target.value;
     this.setState({roomName}, () => this.changeRoom(from, this.state.roomName));   
-  }
+  };
 
   formatTimestamp = timestamp => {
     timestamp = timestamp.split('Z')[0];
@@ -116,48 +119,18 @@ class Chat extends React.Component {
   };
 
   render() {
-    return (
+    return(
       <div>
-      <div>      
-      <button className="btn" value="1" disabled={this.state.roomName === '1'} onClick={this.roomButtonOnClick}>Room 1</button>   
-      <button className="btn" value="2" disabled={this.state.roomName === '2'} onClick={this.roomButtonOnClick}>Room 2</button>   
-      <button className="btn" value="3" disabled={this.state.roomName === '3'} onClick={this.roomButtonOnClick}>Room 3</button>   
+        <ChatMessages 
+          state={this.state}
+          roomButtonOnClick={this.roomButtonOnClick}
+          onInputKeyPress={this.onInputKeyPress}
+          onChangeInputValue={this.onChangeInputValue}
+          formatTimestamp={this.formatTimestamp}
+          sendMessage={this.sendMessage}
+        />
       </div>
-        <span className="online-users">
-          Online users [{this.state.onlineUsers.length}]:{' '}
-          {this.state.onlineUsers}
-        </span>
-        <div className="message-input-block">
-          <input
-            type="text"
-            value={this.state.message}
-            onKeyPress={this.onInputKeyPress}
-            onChange={e => this.setState({ message: e.target.value })}
-          />
-          <button
-            type="button"
-            disabled={!this.state.message}
-            onClick={this.sendMessage}
-          >
-            Send
-          </button>
-        </div>
-        <Scroll id="chat-scroll">
-          <div className="chat-container">
-            {this.state.messages.map((message, index) => (
-              <div className="chat-message" key={index}>
-                <span className="chat-message-header">
-                  {this.formatTimestamp(message.sent)} {message.user}
-                </span>
-                <br />
-                <p className="chat-message-body">{message.message}</p>
-              </div>
-            ))}
-          </div>
-        </Scroll>
-        <br />
-      </div>
-    );
+    )
   }
 }
 

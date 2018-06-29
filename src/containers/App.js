@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Chat from '../components/Chat/Chat.js';
+import Chat from '../containers/Chat/Chat.js';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
