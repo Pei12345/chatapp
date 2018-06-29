@@ -3,15 +3,9 @@ import './ChatMessages.css';
 import Scroll from '../Scroll/Scroll.js';
 
 const ChatMessages = (props) => {
-    const {state, roomButtonOnClick, formatTimestamp,} = props;
+    const {state, formatTimestamp,} = props;
     return (
         <div>
-        <div>      
-        {/* Buttons -> -> new component */}
-        <button className="btn" value="1" disabled={state.roomName === '1'} onClick={roomButtonOnClick}>Room 1</button>   
-        <button className="btn" value="2" disabled={state.roomName === '2'} onClick={roomButtonOnClick}>Room 2</button>   
-        <button className="btn" value="3" disabled={state.roomName === '3'} onClick={roomButtonOnClick}>Room 3</button>   
-        </div>
           <Scroll id="chat-scroll">
             <div className="chat-container">
               {state.messages.map((message, index) => (

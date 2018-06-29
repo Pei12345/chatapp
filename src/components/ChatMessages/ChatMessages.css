@@ -29,13 +29,4 @@
     background-color: #222;
   }
     
-  .btn {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
-  }
   
-  .btn:disabled {
-    border: 2px solid #1abc9c;
-    color: #1abc9c;
-  }
