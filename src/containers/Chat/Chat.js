@@ -108,14 +108,11 @@ class Chat extends React.Component {
 
   // SignalR send message
   sendMessage = () => {
-    this.setState({ message: this.state.message.trim() });
+    const { nick, roomName, message } = this.state;
+    this.setState({ message: message.trim() });
+
     this.state.hubConnection
-      .invoke(
-        'SendMessage',
-        this.state.nick,
-        this.state.roomName,
-        this.state.message
-      )
+      .invoke('SendMessage', nick, roomName, message)
       .then(() => {
         this.setState({ message: '' });
       })
