@@ -24,7 +24,7 @@ class Chat extends React.Component {
       ],
       onlineUsers: []
     };
-  }
+  };
 
   getNick = () => {
     let nick = sessionStorage.getItem('nick');
@@ -39,6 +39,13 @@ class Chat extends React.Component {
     return nick;
   };
 
+  getRoomFromSessionStorage = () => {
+    if(sessionStorage.getItem('roomName') != null 
+    && sessionStorage.getItem('roomName').length){
+      this.setState({roomName: sessionStorage.getItem('roomName')});
+    }
+  }
+
   onChangeInputValue = e => {
     this.setState({ message: e.target.value });
   };
@@ -52,9 +59,10 @@ class Chat extends React.Component {
   roomButtonOnClick = e => {
     const from = this.state.roomName;
     const roomName = e.target.value;
-    this.setState({ roomName }, () =>
+    this.setState({ roomName }, () => {
       this.changeRoom(from, this.state.roomName)
-    );
+      sessionStorage.setItem('roomName', roomName);
+    });
   };
 
   formatTimestamp = timestamp => {
@@ -67,8 +75,9 @@ class Chat extends React.Component {
   };
 
   componentDidMount = () => {
-    // setup nickname and connection
+    // setup nick and current room
     const nick = this.getNick();
+    this.getRoomFromSessionStorage();
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
@@ -126,26 +135,27 @@ class Chat extends React.Component {
   };
 
   render() {
+    const {...state} = this.state;
     return (
       <div>
-        <ChatOnlineUsers onlineUsers={this.state.onlineUsers} />
+        <ChatOnlineUsers onlineUsers={state.onlineUsers} />
         <ChatRoomButtonGroup 
-          roomName={this.state.roomName}
+          roomName={state.roomName}
           roomButtonOnClick={this.roomButtonOnClick}
         />
         <ChatMessageInput
-          message={this.state.message}
+          message={state.message}
           onInputKeyPress={this.onInputKeyPress}
           onChangeInputValue={this.onChangeInputValue}
           sendMessage={this.sendMessage}
         />
         <ChatMessages
-          state={this.state}
+          state={state}
           formatTimestamp={this.formatTimestamp}
         />
       </div>
     );
-  }
+  };
 }
 
 export default Chat;
