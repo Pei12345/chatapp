@@ -10,15 +10,14 @@ const theme = createMuiTheme({
     type: 'dark',
     primary: {
       main: '#1abc9c',
-      light: '#1abc9c',
-      dark: 'grey',      
+      dark: '#f2f2f2',      
     },
     secondary: {
-      main: '#1abc9c',
-      dark: 'green',      
+      main: '#f2f2f2',     
+      dark: '#1abc9c',
     },
     action: {
-      disabledBackground: 'rgba(0, 29, 0, 0.1)'
+      disabledBackground: 'rgba(0, 29, 0, 0.05)'
     }
   },
 });

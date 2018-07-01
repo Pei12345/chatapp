@@ -6,7 +6,7 @@ const ChatRoomButtonGroup = (props) => {
     const {roomName, roomButtonOnClick} = props;
     const rooms = ['1','2','3'];
     return(
-        <div>
+        <div className="chatroom-button-group">
             {rooms.map((room, index) => {
                 return <ChatRoomButton 
                     key={index}

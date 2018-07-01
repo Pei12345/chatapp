@@ -1,17 +1,27 @@
 import React from 'react';
 import './ChatRoomButton.css';
+import { Button } from '@material-ui/core';
 
 const ChatRoomButton = props => {
     const {value, roomName, roomButtonOnClick, buttonText} = props;
   return (
-    <button
+    <div className="btn-chatroom-wrap">
+    <Button
+      variant="contained"
+      color="secondary"
       className="btn-chatroom"
+      type="button"
       value={value}
       disabled={(roomName === value)}
       onClick={roomButtonOnClick}
+      classes={{
+        root: 'classes-state-root',
+        disabled: 'disabled'
+      }}
     >
-      {buttonText}
-    </button>    
+        {buttonText}
+      </Button>  
+      </div>
   );
 };
 

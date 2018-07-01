@@ -1,10 +1,9 @@
-.btn-chatroom {
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
+.btn-chatroom-wrap {
+    margin: 0px 5px;
+    padding: 0px;
   }
   
   .btn-chatroom:disabled {
-    border: 2px solid #1abc9c;
+    border: 1px solid #1abc9c;
     color: #1abc9c;
   }
