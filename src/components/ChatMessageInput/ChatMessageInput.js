@@ -1,25 +1,32 @@
 import React from 'react';
 import './ChatMessageInput.css';
+import { Button, Input } from '@material-ui/core';
 
 const ChatMessageInput = props => {
   const { message, onInputKeyPress, onChangeInputValue, sendMessage } = props;
   return (
     <div className="message-input-block">
-      <input
+      <Input
+        placeholder="Message"
         className="message-input"
-        type="text"
         value={message}
         onKeyPress={onInputKeyPress}
         onChange={onChangeInputValue}
       />
-      <button 
-        className="btn-message-send" 
-        type="button" 
-        disabled={!message} 
+      <Button
+        variant="contained"
+        color="primary"
+        className="btn-message-send"
+        type="button"
+        disabled={!message}
         onClick={sendMessage}
+        classes={{
+          root: 'classes-state-root',
+          disabled: 'disabled'
+        }}
       >
         Send
-      </button>
+      </Button>
     </div>
   );
 };
