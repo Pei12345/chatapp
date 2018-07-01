@@ -1,3 +1,17 @@
 .message-input-block {
-    margin: 40px;
-  }
+  margin: 30px;
+}
+
+.message-input {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.message-input:focus {
+  outline: 2px solid #1abc9c;
+}
+
+.btn-message-send {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}

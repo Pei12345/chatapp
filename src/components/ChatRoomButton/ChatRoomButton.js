@@ -5,7 +5,7 @@ const ChatRoomButton = props => {
     const {value, roomName, roomButtonOnClick, buttonText} = props;
   return (
     <button
-      className="btn"
+      className="btn-chatroom"
       value={value}
       disabled={(roomName === value)}
       onClick={roomButtonOnClick}
