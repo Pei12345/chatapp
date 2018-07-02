@@ -35,18 +35,18 @@ class Chat extends React.Component {
         return this.getNick();
       }
       sessionStorage.setItem('nick', nick);
-    }
+    };
     return nick;
   };
 
   getRoomFromSessionStorage = () => {
     if(sessionStorage.getItem('roomName') != null 
-    && sessionStorage.getItem('roomName').length){
-      this.setState({roomName: sessionStorage.getItem('roomName')});
-      return sessionStorage.getItem('roomName');
+      && sessionStorage.getItem('roomName').length){
+        this.setState({roomName: sessionStorage.getItem('roomName')});
+        return sessionStorage.getItem('roomName');
     }
     return '1';
-  }
+  };
 
   onChangeInputValue = e => {
     this.setState({ message: e.target.value });
@@ -59,9 +59,9 @@ class Chat extends React.Component {
   };
 
   roomButtonOnClick = roomName => {
-    const from = this.state.roomName;
+    const fromRoom = this.state.roomName;
     this.setState({ roomName }, () => {
-      this.changeRoom(from, this.state.roomName)
+      this.changeRoom(fromRoom, roomName)
       sessionStorage.setItem('roomName', roomName);
     });
   };
@@ -71,14 +71,14 @@ class Chat extends React.Component {
     const offset = moment().utcOffset();
     const time = moment(timestamp)
       .add(offset, 'minute')
-      .format('DD.M.YYYY HH:mm:ss');
+      .format('D.M.YYYY HH:mm:ss');
     return time;
   };
 
   componentDidMount = () => {
     // get nick and current room
     const nick = this.getNick(); 
-    const room = this.getRoomFromSessionStorage()
+    const room = this.getRoomFromSessionStorage();
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
@@ -88,13 +88,12 @@ class Chat extends React.Component {
       .build();
 
     this.setState({ hubConnection, nick }, () => {
-      this.state.hubConnection
-        .start()
+      hubConnection.start()
         .catch(err => console.error(err.toString()));
 
       // SignalR get chat history onconnect
-      this.state.hubConnection.on('ChatHistory', history => {
-        const messages = history.map((message, index) => {
+      hubConnection.on('ChatHistory', history => {
+        const messages = history.map((message) => {
           return message;
         });
         messages.reverse();
@@ -102,28 +101,27 @@ class Chat extends React.Component {
       });
 
       // SignalR get online users
-      this.state.hubConnection.on('GetOnlineUsers', receivedUsers => {
-        const onlineUsers = receivedUsers.map((user, index) => {
+      hubConnection.on('GetOnlineUsers', receivedUsers => {
+        const onlineUsers = receivedUsers.map((user) => {
           return user.username + ', ';
         });
         this.setState({ onlineUsers });
       });
 
       // SignalR set state with received message
-      this.state.hubConnection.on('ReceiveMessage', receivedMessage => {
+      hubConnection.on('ReceiveMessage', receivedMessage => {
         const messages = [receivedMessage].concat(this.state.messages);
         this.setState({ messages });
       });
     });
   };
 
-  // SignalR send message
   sendMessage = () => {
-    const { nick, roomName, message } = this.state;
-    this.setState({ message: message.trim() });
-
-    this.state.hubConnection
-      .invoke('SendMessage', nick, roomName, message)
+    const { nick, roomName, message, hubConnection } = this.state;
+        
+    // SignalR send message
+    hubConnection
+      .invoke('SendMessage', nick, roomName, Message)
       .then(() => {
         this.setState({ message: '' });
       })
@@ -157,6 +155,6 @@ class Chat extends React.Component {
       </div>
     );
   };
-}
+};
 
 export default Chat;
