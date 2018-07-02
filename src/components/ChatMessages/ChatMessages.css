@@ -19,6 +19,9 @@
   .chat-message-body {
     margin-top: 5px;
     text-align: justify;
+    word-wrap: break-word;         
+    overflow-wrap: break-word;  
+    width: 100%;
   }
   
   .chat-message-header {
