@@ -13,7 +13,7 @@ const ChatRoomButton = props => {
       type="button"
       value={value}
       disabled={(roomName === value)}
-      onClick={roomButtonOnClick}
+      onClick={() => roomButtonOnClick(value)}
       classes={{
         root: 'classes-state-root',
         disabled: 'disabled'

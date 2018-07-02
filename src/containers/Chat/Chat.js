@@ -43,7 +43,9 @@ class Chat extends React.Component {
     if(sessionStorage.getItem('roomName') != null 
     && sessionStorage.getItem('roomName').length){
       this.setState({roomName: sessionStorage.getItem('roomName')});
+      return sessionStorage.getItem('roomName');
     }
+    return '1';
   }
 
   onChangeInputValue = e => {
@@ -56,9 +58,8 @@ class Chat extends React.Component {
     }
   };
 
-  roomButtonOnClick = e => {
+  roomButtonOnClick = roomName => {
     const from = this.state.roomName;
-    const roomName = e.target.value;
     this.setState({ roomName }, () => {
       this.changeRoom(from, this.state.roomName)
       sessionStorage.setItem('roomName', roomName);
@@ -75,14 +76,14 @@ class Chat extends React.Component {
   };
 
   componentDidMount = () => {
-    // setup nick and current room
-    const nick = this.getNick();
-    this.getRoomFromSessionStorage();
+    // get nick and current room
+    const nick = this.getNick(); 
+    const room = this.getRoomFromSessionStorage()
 
     // SignalR hub setup
     const hubUrl = process.env.REACT_APP_HUB;
     const hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(hubUrl + `?name=${nick}&roomName=${this.state.roomName}`)
+      .withUrl(hubUrl + `?name=${nick}&roomName=${room}`)
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
