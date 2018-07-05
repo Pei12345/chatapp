@@ -4,4 +4,5 @@ body {
   font-family: sans-serif;
   color: lightgray;
   background-color: #4a4a4a;
+  overflow-x: hidden; /* this is to hide scrollbar on chat messages*/
 }
